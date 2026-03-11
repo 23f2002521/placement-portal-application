@@ -266,8 +266,19 @@ def admin_unblacklist_company(cmp_id):
         flash(f"{cmp.name} is not blacklisted")
         return redirect("/admin/dash")
     cmp.approval_status = "active"
+    now = datetime.now()
+    cancelled_drives = PlacementDrive.query.filter(
+        PlacementDrive.company_id == cmp_id,
+        PlacementDrive.status == "cancelled",
+        PlacementDrive.application_deadline > now
+    ).all()
+    for drive in cancelled_drives:
+        drive.status = "Pending"
     db.session.commit()
-    flash(f"{cmp.name} is unblacklisted")
+    if cancelled_drives:
+        flash(f"{cmp.name} is unblacklisted. Restored {len(cancelled_drives)} active drive(s).")
+    else:
+        flash(f"{cmp.name} is unblacklisted")
     return redirect("/admin/dash")
 
 @app.route("/admin/student/<int:stud_id>/blacklist", methods=["POST"])
