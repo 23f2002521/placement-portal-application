@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand fs-5" href="#">Placement portal application</a>
+            <div class="ms-auto">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('log_out') }}">logout</a>
+            </div>
+        </div>
+    </nav>
+
+    {% set messages=get_flashed_messages() %}
+    {% for msg in messages %}
+    <div class="alert alert-warning alert-dismissible fade show mt-3 mx-5" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+<div class="row mt-4 mx-4 g-3">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="text-muted">Total Students</div>
+                <div class="fs-4 fw-semibold">{{ total_students }}</div>
+                </div>
+        </div>
+        </div>
+    <div class="col-md-3">
+    <div class="card text-center">
+    <div class="card-body">
+    <div class="text-muted">Total Companies</div>
+    <div class="fs-4 fw-semibold">{{ total_companies }}</div>
+    </div>
+    </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+        <div class="card-body">
+        <div class="text-muted">Total Applications</div>
+        <div class="fs-4 fw-semibold">{{ total_applications }}</div>
+        </div>
+            </div>
+        </div>
+<div class="col-md-3">
+<div class="card text-center">
+<div class="card-body">
+<div class="text-muted">Total Drives</div>
+<div class="fs-4 fw-semibold">{{ total_drives }}</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="card mt-4 ms-5 me-5">
+    <div class="card-body">
+        <h5 class="card-title">Companies waiting for approval</h5>
+        <p>Total pending companies: {{ requested_prof|length }}</p>
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+            <th>Company Name</th>
+            <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for rp in requested_prof %}
+            <tr>
+            <td>{{ rp.name }}</td>
+            <td>
+            <form action="/company?task=approve&cmp_id={{ rp.cmp_id }}" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+            </form>
+            <form action="{{ url_for('reject_comp', cmp_id=rp.cmp_id) }}" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+            </form>
+            </td>
+            </tr>
+            {% else %}
+            <tr>
+            <td colspan="2">No companies waiting for approval</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+<div class="card mt-4 ms-5 me-5">
+<div class="card-body">
+<h5 class="card-title">Drives waiting for approval</h5>
+<table class="table table-bordered">
+<thead>
+    <tr>
+        <th>Drive Name</th>
+        <th>Company</th>
+        <th>Job Title</th>
+        <th>Action</th>
+    </tr>
+</thead>
+<tbody>
+{% for drive in requested_drives %}
+    <tr>
+        <td>{{ drive.drive_name }}</td>
+        <td>{{ drive.company.name }}</td>
+        <td>{{ drive.job_title }}</td>
+        <td>
+        <form action="{{ url_for('admin_approve_drive', drive_id=drive.placemnt_id) }}" method="POST" class="d-inline">
+        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+        </form>
+        <form action="{{ url_for('admin_reject_drive', drive_id=drive.placemnt_id) }}" method="POST" class="d-inline">
+         <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+        </form>
+    <a href="{{ url_for('admin_drive_details', drive_id=drive.placemnt_id) }}" class="btn btn-sm btn-info">view details</a>
+        </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">No drive requests</td>
+        </tr>
+        {% endfor %}
+     </tbody>
+    </table>
+    </div>
+    </div>
+
+<div class="card mt-4 ms-5 me-5">
+    <div class="card-body">
+        <h5 class="card-title">Registered Companies</h5>
+        <form method="GET" action="{{ url_for('ad_dash') }}" class="row g-2 mb-3">
+        <div class="col-md-8">
+        <input type="text" class="form-control" name="company_search" value="{{ company_search or '' }}" placeholder="search companies by name or industry">
+        </div>
+        <div class="col-md-4">
+        <button type="submit" class="btn btn-primary btn-sm">search</button>
+        <a href="{{ url_for('ad_dash') }}" class="btn btn-outline-secondary btn-sm">clear</a>
+        </div>
+        </form>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Company Name</th>
+        <th>Industry</th>
+        <th>Status</th>
+        <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for comp in all_comp %}
+        <tr>
+        <td>{{ comp.name }}</td>
+        <td>{{ comp.industry or "Not added" }}</td>
+        <td>{{ comp.approval_status }}</td>
+        <td>
+        {% if comp.approval_status|lower != "blacklisted" %}
+        <form action="{{ url_for('admin_blacklist_company', cmp_id=comp.cmp_id) }}" method="POST" class="d-inline">
+        <button type="submit" class="btn btn-sm btn-danger">Blacklist</button>
+        </form>
+        {% else %}
+    <form action="{{ url_for('admin_unblacklist_company', cmp_id=comp.cmp_id) }}" method="POST" class="d-inline">
+    <button type="submit" class="btn btn-sm btn-warning">Unblacklist</button>
+    </form>
+        {% endif %}
+        </td>
+        </tr>
+        {% else %}
+        <tr>
+        <td colspan="4">No companies found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    </div>
+        </div>
+
+<div class="card mt-4 ms-5 me-5">
+    <div class="card-body">
+        <h5 class="card-title">Registered Students</h5>
+        <form method="GET" action="{{ url_for('ad_dash') }}" class="row g-2 mb-3">
+        <div class="col-md-8">
+        <input type="text" class="form-control" name="student_search" value="{{ student_search or '' }}" placeholder="search students by name, id or contact">
+        </div>
+        <div class="col-md-4">
+        <button type="submit" class="btn btn-primary btn-sm">search</button>
+        <a href="{{ url_for('ad_dash') }}" class="btn btn-outline-secondary btn-sm">clear</a>
+        </div>
+        </form>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for stu in all_stu %}
+    <tr>
+        <td>{{ stu.stud_id }}</td>
+        <td>{{ stu.name }}</td>
+        <td>{{ stu.email }}</td>
+        <td>{{ stu.status }}</td>
+        <td>
+        {% if stu.status|lower!="blacklisted" %}
+        <form action="{{ url_for('admin_blacklist_student', stud_id=stu.stud_id) }}" method="POST" class="d-inline">
+        <button type="submit" class="btn btn-sm btn-danger">Blacklist</button>
+        </form>
+        {% else %}
+        <form action="{{ url_for('admin_unblacklist_student', stud_id=stu.stud_id) }}" method="POST" class="d-inline">
+        <button type="submit" class="btn btn-sm btn-warning">Unblacklist</button>
+        </form>
+        {% endif %}
+        </td>
+        </tr>
+        {% else %}
+        <tr>
+        <td colspan="5">No students found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    </div>
+
+    <div class="card mt-4 ms-5 me-5">
+        <div class="card-body">
+            <h5 class="card-title">Ongoing Drives</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>Drive Name</th>
+                        <th>Company</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for drive in ongoing_drives %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ drive.drive_name }}</td>
+                        <td>{{ drive.company.name }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_drive_details', drive_id=drive.placemnt_id) }}" class="btn btn-sm btn-info">view details</a>
+                            <form action="{{ url_for('admin_mark_drive_complete', drive_id=drive.placemnt_id) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success">mark as complete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No ongoing drives</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<div class="card mt-4 ms-5 me-5">
+    <div class="card-body">
+        <h5 class="card-title">Student Applications</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sr No.</th>
+                    <th>Name</th>
+                    <th>Drive</th>
+                    <th>Company</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appln in student_applications %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ appln.student.name }}</td>
+                    <td>{{ appln.drive.drive_name }}</td>
+                    <td>{{ appln.drive.company.name }}</td>
+                    <td>{{ appln.application_date.strftime('%d/%m/%Y') }}</td>
+                    <td><a href="{{ url_for('admin_application_details', appln_id=appln.appln_id) }}" class="btn btn-sm btn-outline-primary">view</a></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">No applications yet</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

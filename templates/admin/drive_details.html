@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>{{ drive.drive_name }} - Details</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Company:</strong> {{ drive.company.name }}</p>
+                <p><strong>Job Title:</strong> {{ drive.job_title }}</p>
+                <p><strong>Job Description:</strong> {{ drive.job_description }}</p>
+                <p><strong>Eligibility Criteria:</strong> {{ drive.eligibility_criteria }}</p>
+                <p><strong>Application Deadline:</strong> {{ drive.application_deadline }}</p>
+                <p><strong>Status:</strong> {{ drive.status }}</p>
+                <p><strong>Salary:</strong> {{ drive.salary }}</p>
+                <p><strong>Skills required:</strong> {{ drive.skills }}</p>
+                <p><strong>Experience:</strong> {{ drive.exp }}</p>
+
+
+                <a href="/admin/dash" class="btn btn-secondary btn-sm">back</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

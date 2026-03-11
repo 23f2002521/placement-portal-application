@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  </head>
+<body>
+  {% set messages=get_flashed_messages() %}
+{% for msg in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{msg}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+    <form action="/register?u_type=company", method="POST">
+    <div class="container d-flex">
+       <div class ="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card" style="width: 30%;">
+      <div class="card-header">
+        Company register
+      </div>
+      <div class="card-body">
+      <form method ="POST" action="/login">
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingname" name="comp_name" placeholder="name" >
+          <label for="floatingInput">Company name</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="email" class="form-control" id="floatingInput" name="comp_email" placeholder="name@example.com" >
+          <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="floatingPassword" name="comp_password" placeholder="Password">
+          <label for="floatingPassword">Password</label> 
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingIndustry" name="industry" placeholder="Industry">
+            <label for="floatingIndustry">Industry</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingHrContact" name="hr_contact" placeholder="HR Contact">
+            <label for="floatingHrContact">HR Contact</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="url" class="form-control" id="floatingWebsite" name="website" placeholder="Website Link">
+            <label for="floatingWebsite">Website Link</label>
+        </div>
+        <div>
+          <h5> already have account? login</h5>
+          <a href="/login">login</a>
+        </div>
+    </div>
+    <button class="btn btn-warning"> save</button>
+</form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>
+

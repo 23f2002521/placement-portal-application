@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Applications</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+        <h4>Update Applications for the Drive</h4>
+        <p class="mb-0"><strong>Job Title:</strong> {{ drive.job_title }}</p>
+        </div>
+        <div class="card-body">
+          {% set messages=get_flashed_messages() %}
+          {% for msg in messages %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{msg}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+
+          <div class="mb-3">
+            <a href="{{ url_for('view_shortls_stu', drive_id=drive.placemnt_id) }}" class="btn btn-sm btn-primary">view shortlisted profiles</a>
+          </div>
+          <h6>Received Applications</h6>
+          <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Sl No</th>
+      <th>Student</th>
+      <th>Current Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for appln in applications %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ appln.student.name }}</td>
+      <td>{{ appln.status }}</td>
+      <td>
+        <a href="{{ url_for('review_one_appln', appln_id=appln.appln_id) }}" class="btn btn-sm btn-outline-primary">review application</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="4">No applications yet</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div >
+    <a href="/company/dash" class="btn btn-info">back</a>
+</div>
+
+
+        </div>
+    </div>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>
+
